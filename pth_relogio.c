@@ -1,3 +1,7 @@
+/*Alunos:
+	GABRIEL DE SOUZA TELES
+	MATHEUS LIMA DA CRUZ
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
