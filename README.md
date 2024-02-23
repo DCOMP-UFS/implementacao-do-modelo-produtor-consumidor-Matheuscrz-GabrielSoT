@@ -10,3 +10,7 @@ Com base no exemplo pth_pool.c, implemente o modelo de comunicação entre threa
  - Buffer limitado
  - 3 Produtoras
  - 3 Consumidoras
+
+# Integrantes
+- Gabriel de Souza Teles
+- Matheus Lima da Cruz
