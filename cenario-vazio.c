@@ -16,27 +16,27 @@
 // Buffer compartilhado entre produtores e consumidores
 int buffer[BUFFER_SIZE];
 int count = 0;  // Contador de elementos no buffer
-int in = 0;     // Õndice para inserÁ„o no buffer
-int out = 0;    // Õndice para remoÁ„o do buffer
+int in = 0;     // √çndice para inser√ß√£o no buffer
+int out = 0;    // √çndice para remo√ß√£o do buffer
 
-// Mutex e condiÁıes para controle de concorrÍncia
+// Mutex e condi√ß√µes para controle de concorr√™ncia
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t not_full = PTHREAD_COND_INITIALIZER;
 pthread_cond_t not_empty = PTHREAD_COND_INITIALIZER;
 
-// FunÁ„o do produtor
+// Fun√ß√£o do produtor
 void* produtor(void* arg) {
     // Identificador da thread produtora
     int id_thread = *((int*)arg);
 
     while (1) {
-        // Produzir relÛgio vetorial
+        // Produzir rel√≥gio vetorial
         int valor_relogio = rand() % 100;
 
-        // Bloqueio: Adquirir o mutex antes de acessar a regi„o crÌtica
+        // Bloqueio: Adquirir o mutex antes de acessar a regi√£o cr√≠tica
         pthread_mutex_lock(&mutex);
 
-        // Bloqueio: Esperar atÈ que haja espaÁo no buffer
+        // Bloqueio: Esperar at√© que haja espa√ßo no buffer
         while (count == BUFFER_SIZE) {
             printf("Produtor %d bloqueado - Buffer cheio\n", id_thread);
             pthread_cond_wait(&not_full, &mutex);
@@ -47,27 +47,27 @@ void* produtor(void* arg) {
         in = (in + 1) % BUFFER_SIZE;
         count++;
 
-        printf("Produtor %d produziu 1 relÛgio vetorial. Total no buffer: %d\n", id_thread, count);
+        printf("Produtor %d produziu 1 rel√≥gio vetorial. Total no buffer: %d\n", id_thread, count);
 
-        // Desbloqueio: Notificar consumidores que o buffer n„o est· mais vazio
+        // Desbloqueio: Notificar consumidores que o buffer n√£o est√° mais vazio
         pthread_cond_signal(&not_empty);
-        // Desbloqueio: Liberar o mutex apÛs acessar a regi„o crÌtica
+        // Desbloqueio: Liberar o mutex ap√≥s acessar a regi√£o cr√≠tica
         pthread_mutex_unlock(&mutex);
 
         sleep(2);  // Produtor dorme mais tempo
     }
 }
 
-// FunÁ„o do consumidor
+// Fun√ß√£o do consumidor
 void* consumidor(void* arg) {
     // Identificador da thread consumidora
     int id_thread = *((int*)arg);
 
     while (1) {
-        // Bloqueio: Adquirir o mutex antes de acessar a regi„o crÌtica
+        // Bloqueio: Adquirir o mutex antes de acessar a regi√£o cr√≠tica
         pthread_mutex_lock(&mutex);
 
-        // Bloqueio: Esperar atÈ que haja itens no buffer
+        // Bloqueio: Esperar at√© que haja itens no buffer
         while (count == 0) {
             printf("Consumidor %d bloqueado - Buffer vazio\n", id_thread);
             pthread_cond_wait(&not_empty, &mutex);
@@ -77,11 +77,11 @@ void* consumidor(void* arg) {
         out = (out + 1) % BUFFER_SIZE;
         count--;
 
-        printf("Consumidor %d consumiu 1 relÛgio vetorial. Total no buffer: %d\n", id_thread, count);
+        printf("Consumidor %d consumiu 1 rel√≥gio vetorial. Total no buffer: %d\n", id_thread, count);
 
-        // Desbloqueio: Notificar produtores que o buffer n„o est· mais cheio
+        // Desbloqueio: Notificar produtores que o buffer n√£o est√° mais cheio
         pthread_cond_signal(&not_full);
-        // Desbloqueio: Liberar o mutex apÛs acessar a regi„o crÌtica
+        // Desbloqueio: Liberar o mutex ap√≥s acessar a regi√£o cr√≠tica
         pthread_mutex_unlock(&mutex);
 
         sleep(1);  // Consumidor dorme menos tempo
@@ -106,12 +106,12 @@ int main() {
         pthread_create(&consumidores[i], NULL, consumidor, (void*)id_thread);
     }
 
-    // Aguardar o tÈrmino das threads produtoras
+    // Aguardar o t√©rmino das threads produtoras
     for (int i = 0; i < NUM_PRODUTORES; i++) {
         pthread_join(produtores[i], NULL);
     }
 
-    // Aguardar o tÈrmino das threads consumidoras
+    // Aguardar o t√©rmino das threads consumidoras
     for (int i = 0; i < NUM_CONSUMIDORES; i++) {
         pthread_join(consumidores[i], NULL);
     }
